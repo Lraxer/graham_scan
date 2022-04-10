@@ -11,6 +11,6 @@ Generating points and plotting in Python.
 ## TODO
 
 - [ ] Modify `.gitignore`
-- [ ] Separate a processing function from `readgraph.rs`
+- [x] Separate a processing function from `readgraph.rs`
 - [ ] Add more tests
 - [ ] Consider removing Python in the future

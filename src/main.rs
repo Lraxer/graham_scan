@@ -6,9 +6,10 @@ fn main() {
     let input_filename = "randGraph.txt";
     let output_filename = "edge.txt";
 
-    let point_vec = readgraph::open_read_graph(input_filename).unwrap();
-    
-    let edge_vec = graham::scan(point_vec).unwrap();
+    let mut point_vec = readgraph::open_read_graph(input_filename).unwrap();
+    graham::convert_axis(&mut point_vec);
+
+    let edge_vec = graham::scan(&point_vec).unwrap();
 
     save_edge::save_edge(output_filename, &edge_vec).unwrap();
 }

@@ -1,14 +1,42 @@
 use crate::point::{cross_product, Point};
 
-pub fn scan(mut point_vec: Vec<Point>) -> Result<Vec<u32>, ()> {
+pub fn convert_axis(point_vec: &mut [Point]) {
+    // find the bottom left point and move to the first place
+    let mut tmp_serial_num = 1u32;
+    for i in point_vec.iter() {
+        if (point_vec[(tmp_serial_num - 1) as usize].get_y() > i.get_y())
+            || ((point_vec[(tmp_serial_num - 1) as usize].get_y() == i.get_y())
+                && point_vec[(tmp_serial_num - 1) as usize].get_x() > i.get_x())
+        {
+            tmp_serial_num = i.get_serial_num().unwrap();
+        }
+    }
+
+    point_vec.swap(0, (tmp_serial_num - 1) as usize);
+
     // make the first point be the origin
-    // let bl_point = point_vec[0].clone();
-    let tmp_sn = point_vec[0].get_serial_num();
+    // convert all points to vectors to the bottom left point
+    let length: u32 = point_vec.len() as u32;
+    let mut ind: u32 = 1;
+
+    while ind < length {
+        let tmp_serial_num = point_vec[ind as usize].get_serial_num();
+        point_vec[ind as usize] = point_vec[ind as usize].clone() - point_vec[0].clone();
+        point_vec[ind as usize]
+            .change_serial_num(tmp_serial_num)
+            .unwrap();
+
+        ind += 1;
+    }
+
+    let tmp_serial_num = point_vec[0].get_serial_num();
     point_vec[0] = point_vec[0].clone() - point_vec[0].clone();
-    point_vec[0].change_serial_num(tmp_sn).unwrap();
+    point_vec[0].change_serial_num(tmp_serial_num).unwrap();
 
     point_vec.sort_by(|a, b| a.compare(b));
+}
 
+pub fn scan(point_vec: &[Point]) -> Result<Vec<u32>, ()> {
     let mut stack: Vec<&Point> = Vec::new();
     stack.push(&point_vec[0]);
     stack.push(&point_vec[1]);
